@@ -7,7 +7,7 @@ import (
 )
 
 type BookRepository struct {
-	DB sql.DB
+	DB *sql.DB
 }
 
 func (r *BookRepository) Save(book model.Book) error {
