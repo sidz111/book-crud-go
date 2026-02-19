@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/sidz111/book-crud-go/internal/model"
 )
@@ -16,12 +17,13 @@ func (r *BookRepository) Save(book model.Book) error {
 	return err
 }
 
-func (r *BookRepository) Update(book model.Book) model.Book {
+func (r *BookRepository) Update(book model.Book) error {
 	query := "update book set name=?, authorname=?, publishedyear=? where id=?"
-	row := r.DB.QueryRow(query, book.Name, book.AuthorName, book.PublishedYear, book.ID)
-	var b model.Book
-	row.Scan(&book.Name, &book.AuthorName, &book.PublishedYear, &book.ID)
-	return b
+	_, err := r.DB.Exec(query, book.Name, book.AuthorName, book.PublishedYear, book.ID)
+	return err
+	// var b model.Book
+	// row.Scan(&book.Name, &book.AuthorName, &book.PublishedYear, &book.ID)
+	// return b
 }
 
 func (r *BookRepository) DeleteById(id int) (string, error) {
@@ -54,10 +56,16 @@ func (r *BookRepository) GetAllBooks() ([]model.Book, error) {
 	return books, err
 }
 
-func (r *BookRepository) GetBookById(id int) model.Book {
+func (r *BookRepository) GetBookById(id int) (model.Book, error) {
 	query := "select id, name, authorname, publishedyear from book where id =?"
 	row := r.DB.QueryRow(query, id)
 	var book model.Book
-	row.Scan(&book.ID, &book.Name, &book.AuthorName, &book.PublishedYear)
-	return book
+	err := row.Scan(&book.ID, &book.Name, &book.AuthorName, &book.PublishedYear)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return book, fmt.Errorf("Book Not Found")
+		}
+		return book, err
+	}
+	return book, nil
 }

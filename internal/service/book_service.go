@@ -13,7 +13,7 @@ func (s *BookService) Save(book model.Book) error {
 	return s.Repo.Save(book)
 }
 
-func (s *BookService) Update(book model.Book) model.Book {
+func (s *BookService) Update(book model.Book) error {
 	return s.Repo.Update(book)
 }
 
@@ -25,6 +25,6 @@ func (s *BookService) GetAllBooks() ([]model.Book, error) {
 	return s.Repo.GetAllBooks()
 }
 
-func (s *BookService) GetBookById(id int) model.Book {
+func (s *BookService) GetBookById(id int) (model.Book, error) {
 	return s.Repo.GetBookById(id)
 }

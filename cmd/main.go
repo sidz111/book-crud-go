@@ -21,6 +21,9 @@ func main() {
 
 	mux.HandleFunc("/book", controller.Save)
 	mux.HandleFunc("/book/update", controller.Update)
+	mux.HandleFunc("/book/delete", controller.DeleteById)
+	mux.HandleFunc("/books", controller.GetAllBooks)
+	mux.HandleFunc("/book/get", controller.GetBookById)
 
 	fmt.Println("Server started at Port 8080")
 	http.ListenAndServe(":8080", mux)
